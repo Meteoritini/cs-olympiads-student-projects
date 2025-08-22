@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/build",
+  "command": "C:/msys64/mingw64/bin/g++.exe   -g -o CMakeFiles/CIRCUIT.dir/circuit.cpp.obj -c C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/circuit/circuit.cpp",
+  "file": "C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/circuit/circuit.cpp",
+  "output": "CMakeFiles/CIRCUIT.dir/circuit.cpp.obj"
+},
+{
+  "directory": "C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/build/converter",
+  "command": "C:/msys64/mingw64/bin/g++.exe   -g -o CMakeFiles/Converter_BIN.dir/convert_network.cpp.obj -c C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/circuit/converter/convert_network.cpp",
+  "file": "C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/circuit/converter/convert_network.cpp",
+  "output": "converter/CMakeFiles/Converter_BIN.dir/convert_network.cpp.obj"
+},
+{
+  "directory": "C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/build/evaluator",
+  "command": "C:/msys64/mingw64/bin/g++.exe   -g -o CMakeFiles/Evaluator_BIN.dir/evaluator.cpp.obj -c C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/circuit/evaluator/evaluator.cpp",
+  "file": "C:/Users/JoRoB/OneDrive/Documents/Freizeit/Google/cs-olympiads-student-projects/circuit/evaluator/evaluator.cpp",
+  "output": "evaluator/CMakeFiles/Evaluator_BIN.dir/evaluator.cpp.obj"
+}
+]
