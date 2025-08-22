@@ -1,6 +1,5 @@
-#include <iostream>
-#include <fstream>
 #include <cassert>
+#include <iostream>
 #include <random>
 
 int main() {

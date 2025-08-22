@@ -1,27 +1,23 @@
-#include <bits/stdc++.h>
 #include "circuit.h"
+#include <bits/stdc++.h>
 
 const char* NETWORK2_FILE_NAME = "../converter/network.bin";
 const char* NETWORK16_FILE_NAME = "../network/16_gate_probability/trained_network.bin";
 
-int32_t read_int32_t(std::ifstream &in) {
+int32_t read_int32_t(std::ifstream& in) {
     int32_t result = 0;
     in.read(reinterpret_cast<char*>(&result), 4);
-    if(in.fail()) { 
-
+    if (in.fail()) {
         std::ios_base::iostate state = in.rdstate();
 
         // Check for specific error bits
-        if (state & std::ios_base::eofbit)
-        {
+        if (state & std::ios_base::eofbit) {
             std::cout << "End of file reached." << std::endl;
         }
-        if (state & std::ios_base::failbit)
-        {
+        if (state & std::ios_base::failbit) {
             std::cout << "Non-fatal I/O error occurred." << std::endl;
         }
-        if (state & std::ios_base::badbit)
-        {
+        if (state & std::ios_base::badbit) {
             std::cout << "Fatal I/O error occurred." << std::endl;
         }
 
@@ -33,14 +29,14 @@ int32_t read_int32_t(std::ifstream &in) {
         fprintf(stderr, "file bad? %d\n", in.bad());
 
         program_abort(EXIT_FILE_ERROR);
-    
     }
     return result;
 }
 
-void write_int32_t(std::ofstream &out, int32_t data) {
+void write_int32_t(std::ofstream& out, int32_t data) {
     out.write(reinterpret_cast<char*>(&data), 4);
-    if(out.fail()) program_abort(EXIT_FILE_ERROR);
+    if (out.fail())
+        program_abort(EXIT_FILE_ERROR);
 }
 
 void program_abort(int32_t exit_code) {

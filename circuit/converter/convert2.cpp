@@ -1,18 +1,24 @@
 #include <fstream>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #ifdef NDEBUG
-    #define assert(expression) 0
+#define assert(expression) 0
 
 #else
-    #define assert(expression) { if(!expression) { std::cerr << "what: " #expression << "\nfile " << (__FILE__) << ", line " << (__LINE__) << std::endl; std::abort(); }}
+#define assert(expression)                                                                                        \
+    {                                                                                                             \
+        if (!expression) {                                                                                        \
+            std::cerr << "what: " #expression << "\nfile " << (__FILE__) << ", line " << (__LINE__) << std::endl; \
+            std::abort();                                                                                         \
+        }                                                                                                         \
+    }
 
 #endif
 
 typedef int int32_t;
 
-int get_int(std::ifstream &in) {
+int get_int(std::ifstream& in) {
     int32_t eingabe;
     // in.read(reinterpret_cast<char*>(&eingabe), sizeof(int32_t));
     in >> eingabe;

@@ -26,8 +26,8 @@ enum {
     EXIT_CONVERSION_ERROR = 6
 };
 
-int32_t read_int32_t(std::ifstream &in);
-void write_int32_t(std::ofstream &out, int32_t data);
+int32_t read_int32_t(std::ifstream& in);
+void write_int32_t(std::ofstream& out, int32_t data);
 
 [[noreturn]] void program_abort(int32_t exit_code);
 
