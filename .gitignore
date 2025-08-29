@@ -1,4 +1,4 @@
-*/build/
+*/exec/
 .clangd
 */CMakeFiles/
 __pycache__/
@@ -21,10 +21,6 @@ python/
 *.pcy
 .*/ 
 vgcore.*
-
-convert_network
-evaluate_network
-network_architecture.txt
 
 # Exceptions
 !requirements.txt

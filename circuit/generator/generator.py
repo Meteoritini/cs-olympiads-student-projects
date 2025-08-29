@@ -137,5 +137,3 @@ def generate_network_probabilistic_model(rnd_seed: int = 0):
             for l, r in zip(nl, nr):
                 f.write(f"{l} {r} {cnt}\n")
                 cnt += 1
-
-        # optional footer

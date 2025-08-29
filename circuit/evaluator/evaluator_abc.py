@@ -54,7 +54,6 @@ class AndNot_network:
             O = int(parts[4])
             A = int(parts[5])
 
-            # sanity checks (match C++ asserts)
             # read O lines of outputs (one integer per line)
             for _ in range(O):
                 line = f.readline().decode('ascii')
@@ -91,7 +90,7 @@ class AndNot_network:
             self.value[i] = self.getvalue(self.C_1[i]) & self.getvalue(self.C_2[i])
 
     def guess(self, correct: int):
-        # same logic as C++: return fraction of top-tied categories that match `correct`
+        # return fraction of top-tied categories that match `correct`
         g = 0.0
         cnt = 0.0
         category = OUTPUT_NODES // 10  # integer division, 10 categories for MNIST
@@ -109,8 +108,6 @@ class AndNot_network:
 
         maximum = category_ids[0][0]
         i = 0
-        # NOTE: original C++ checked equality before bounds (buggy order). Here we
-        # check bounds first to avoid Python IndexError but preserve intended behaviour.
         while i < 10 and category_ids[i][0] == maximum:
             cnt += 1.0
             if category_ids[i][1] == correct:

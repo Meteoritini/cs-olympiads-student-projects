@@ -21,7 +21,7 @@ FITTING = jnp.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1,
 batch_fitting_function = jax.jit(jax.vmap(lambda a: jnp.multiply(a, FITTING), in_axes = (0)))
 
 
-DEBUG = 0
+DEBUG = False
 
 def inference_function(id, prob, prob_id, left, right, values):
     p = prob[prob_id[id]]
@@ -134,7 +134,7 @@ def input_network():
     return layered_id, LEFT, RIGHT, PROB_ID
 
 def read_values(file):
-    #Autosaving
+    # Caching input files
     if os.path.exists(file + ".values.npy"):
         return jnp.load(file + ".values.npy"), jnp.load(file + ".answers.npy")
 

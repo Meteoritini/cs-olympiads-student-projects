@@ -24,7 +24,7 @@ class Node:
         return f"Node(type={self.type}, id={self.id}, link_a={self.link_a}, link_b={self.link_b})"
 
 
-# Global storage (kept same names as C++ for clarity)
+# Global storage
 input_nodes = []        # list of Node
 toposorted_nodes = []   # list of Node
 final_nodes = []        # list of Node
@@ -42,15 +42,12 @@ def read_int32_t(f):
 
 
 def write_int32_t(f, value):
-    # Ensure value fits in signed 32-bit range
-    # pack will wrap as in C; we replicate typical behaviour by masking then repacking if needed
-    # but keep simple and pack as signed 32-bit.
+    # Pack as signed 32-bit.
     f.write(struct.pack('<i', int(value)))
 
 
 def toposort_nodes():
     """
-    Replicates the C++ toposort_nodes exactly.
     Builds reverse links, counts incoming non-constant links, and performs Kahn's algorithm.
     """
     # Use same container semantics
@@ -83,9 +80,8 @@ def toposort_nodes():
         processed_count += 1
 
         if node_id > INPUT_NODES:
-            # Indexing in C++ used: input_nodes[node_id-INPUT_NODES-1]
+            # Indexing input_nodes[node_id-INPUT_NODES-1]
             idx = node_id - INPUT_NODES - 1
-            # Defensive check: if index out of range, abort as C++ would likely do
             toposorted_nodes.append(input_nodes[idx])
 
         for edge in reverse_link.get(node_id, []):
@@ -94,7 +90,7 @@ def toposort_nodes():
             if link_count[edge] == 0:
                 process_queue.append(edge)
 
-    # Validate processed nodes count equals node_count - INPUT_NODES (same check as C++)
+    # Validate processed nodes count equals node_count - INPUT_NODES
 
 
 def replace_gates():
@@ -106,105 +102,103 @@ def replace_gates():
     for i in range(len(toposorted_nodes)):
         new_nodes = []
 
-        __input_a = toposorted_nodes[i].link_a
-        __input_b = toposorted_nodes[i].link_b
-        __id = toposorted_nodes[i].id
+        input_a = toposorted_nodes[i].link_a
+        input_b = toposorted_nodes[i].link_b
+        id = toposorted_nodes[i].id
         typ = toposorted_nodes[i].type
 
         if typ == 0:  # ALWAYS 0
-            new_nodes.append(Node(0, __id, ALWAYS_FALSE, ALWAYS_FALSE))
+            new_nodes.append(Node(0, id, ALWAYS_FALSE, ALWAYS_FALSE))
 
         elif typ == 1:  # AND
-            new_nodes.append(Node(0, __id, __input_a, __input_b))
+            new_nodes.append(Node(0, id, input_a, input_b))
 
         elif typ == 2:  # A AND !B
-            new_nodes.append(Node(0, __id, __input_a, -__input_b))
+            new_nodes.append(Node(0, id, input_a, -input_b))
 
         elif typ == 3:  # A
-            new_nodes.append(Node(0, __id, __input_a, ALWAYS_TRUE))
+            new_nodes.append(Node(0, id, input_a, ALWAYS_TRUE))
 
         elif typ == 4:  # B AND !A
-            new_nodes.append(Node(0, __id, -__input_a, __input_b))
+            new_nodes.append(Node(0, id, -input_a, input_b))
 
         elif typ == 5:  # B
-            new_nodes.append(Node(0, __id, ALWAYS_TRUE, __input_b))
+            new_nodes.append(Node(0, id, ALWAYS_TRUE, input_b))
 
         elif typ == 6:  # XOR
             clean_gate = next_free_node
-            new_nodes.append(Node(0, next_free_node, __input_a, __input_b))
+            new_nodes.append(Node(0, next_free_node, input_a, input_b))
             next_free_node += 1
 
             neg_gate = next_free_node
-            new_nodes.append(Node(0, next_free_node, -__input_a, -__input_b))
+            new_nodes.append(Node(0, next_free_node, -input_a, -input_b))
             next_free_node += 1
 
-            new_nodes.append(Node(0, __id, -clean_gate, -neg_gate))
+            new_nodes.append(Node(0, id, -clean_gate, -neg_gate))
 
         elif typ == 7:  # OR
             nand_gate = next_free_node
-            new_nodes.append(Node(0, next_free_node, -__input_a, -__input_b))
+            new_nodes.append(Node(0, next_free_node, -input_a, -input_b))
             next_free_node += 1
 
-            new_nodes.append(Node(0, __id, -nand_gate, -nand_gate))
+            new_nodes.append(Node(0, id, -nand_gate, -nand_gate))
 
         elif typ == 8:  # NOR
             t_gate = next_free_node
-            new_nodes.append(Node(0, next_free_node, -__input_a, -__input_b))
+            new_nodes.append(Node(0, next_free_node, -input_a, -input_b))
             next_free_node += 1
 
-            new_nodes.append(Node(0, __id, t_gate, t_gate))
+            new_nodes.append(Node(0, id, t_gate, t_gate))
 
         elif typ == 9:  # XNOR
             nand_1 = next_free_node
-            new_nodes.append(Node(0, next_free_node, __input_a, __input_b))
+            new_nodes.append(Node(0, next_free_node, input_a, input_b))
             next_free_node += 1
 
             nand_2 = next_free_node
-            new_nodes.append(Node(0, next_free_node, __input_a, -nand_1))
+            new_nodes.append(Node(0, next_free_node, input_a, -nand_1))
             next_free_node += 1
 
             nand_3 = next_free_node
-            new_nodes.append(Node(0, next_free_node, __input_b, -nand_1))
+            new_nodes.append(Node(0, next_free_node, input_b, -nand_1))
             next_free_node += 1
 
             nand_4 = next_free_node
             new_nodes.append(Node(0, next_free_node, -nand_2, -nand_3))
             next_free_node += 1
 
-            new_nodes.append(Node(0, __id, nand_4, nand_4))
+            new_nodes.append(Node(0, id, nand_4, nand_4))
 
         elif typ == 10:  # !B
-            new_nodes.append(Node(0, __id, -__input_b, ALWAYS_TRUE))
+            new_nodes.append(Node(0, id, -input_b, ALWAYS_TRUE))
 
         elif typ == 11:  # A OR !B
             nand_gate = next_free_node
-            new_nodes.append(Node(0, next_free_node, -__input_a, __input_b))
+            new_nodes.append(Node(0, next_free_node, -input_a, input_b))
             next_free_node += 1
 
-            new_nodes.append(Node(0, __id, -nand_gate, -nand_gate))
+            new_nodes.append(Node(0, id, -nand_gate, -nand_gate))
 
         elif typ == 12:  # !A
-            new_nodes.append(Node(0, __id, -__input_a, ALWAYS_TRUE))
+            new_nodes.append(Node(0, id, -input_a, ALWAYS_TRUE))
 
         elif typ == 13:  # B OR !A
             nand_gate = next_free_node
-            new_nodes.append(Node(0, next_free_node, __input_a, -__input_b))
+            new_nodes.append(Node(0, next_free_node, input_a, -input_b))
             next_free_node += 1
 
-            new_nodes.append(Node(0, __id, -nand_gate, -nand_gate))
+            new_nodes.append(Node(0, id, -nand_gate, -nand_gate))
 
         elif typ == 14:  # NAND
             and_node = next_free_node
-            new_nodes.append(Node(0, next_free_node, __input_a, __input_b))
+            new_nodes.append(Node(0, next_free_node, input_a, input_b))
             next_free_node += 1
 
-            new_nodes.append(Node(0, __id, -and_node, -and_node))
+            new_nodes.append(Node(0, id, -and_node, -and_node))
 
         elif typ == 15:  # ALWAYS 1
-            new_nodes.append(Node(0, __id, ALWAYS_TRUE, ALWAYS_TRUE))
+            new_nodes.append(Node(0, id, ALWAYS_TRUE, ALWAYS_TRUE))
 
-
-        # Validate same as C++
 
         # Append to final_nodes
         for t in range(len(new_nodes)):
@@ -232,7 +226,7 @@ def convert_network():
 
         input_nodes.append(Node(v0, v1, v2, v3))
 
-    # Sort input_nodes by id as in C++
+    # Sort input_nodes by id
     input_nodes.sort(key=lambda n: n.id)
 
     # Topological sort and gate replacement

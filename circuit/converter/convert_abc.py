@@ -14,7 +14,7 @@ from config import *
 
 
 def read_int32_t(f) -> int:
-    """Read a 32-bit signed int from file (little-endian), same as C++ ifstream read of int32_t."""
+    """Read a 32-bit signed int from file (little-endian)."""
     raw = f.read(4)
     return struct.unpack('<i', raw)[0]
 
@@ -25,7 +25,6 @@ class Node:
     link_a: int
     link_b: int
 
-# Globals matching C++ file-scope variables
 input_nodes: List[Node] = []
 toposorted_nodes: List[Node] = []
 final_nodes: List[Node] = []
@@ -33,10 +32,6 @@ node_remap: List[int] = []
 
 node_count: int = 0
 first_output_id: int = 0
-
-# ---------------------------
-# Algorithm translation
-# ---------------------------
 
 def toposort_nodes():
     global input_nodes, toposorted_nodes, node_count
@@ -186,7 +181,7 @@ def convert_abc_format():
 
     fin = open(TRAINED_NETWORK_16GATES_FILE, 'rb')
 
-    fout = open(TRAINED_NETWORK_2GATES_FILE, 'wb')  # binary, because encode writes binary bytes
+    fout = open(TRAINED_NETWORK_2GATES_FILE, 'wb')
 
     # read node_count
     node_count = read_int32_t(fin)
